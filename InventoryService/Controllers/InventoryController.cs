@@ -26,9 +26,32 @@ namespace InventoryService.Controllers
         {
         }
 
-        // Load inventory
-        // Add item
-        // Update item
-        // Delete item
+        // GET api/<InventoryController>/load
+        [HttpGet("load")]
+        public string LoadInventory()
+        {
+            return "inventory";
+        }
+
+        // GET api/<InventoryController>/add
+        [HttpGet("add")]
+        public string AddItem()
+        {
+            return "added";
+        }
+
+        // GET api/<InventoryController>/update
+        [HttpGet("update")]
+        public string UpdateItem()
+        {
+            return "updated";
+        }
+
+        // GET api/<InventoryController>/delete
+        [HttpGet("delete")]
+        public string Delete()
+        {
+            return "deleted";
+        }
     }
 }
