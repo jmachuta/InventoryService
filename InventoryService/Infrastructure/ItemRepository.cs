@@ -43,5 +43,25 @@ namespace InventoryService.Infrastructure
 
             return items;
         }
+
+        public void AddItem(AddItemRequest request)
+        {
+            var connection = new SqlConnection(DatabaseConnectionString.ConnectionString);
+            connection.Open();
+
+            var command = new SqlCommand("[dbo].[usp_AddItem]", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            command.Parameters.Add("@Name", SqlDbType.VarChar, 100).Value = request.Name;
+            command.Parameters.Add("@Quantity", SqlDbType.Int).Value = request.Quantity;
+            command.Parameters.Add("@CategoryID", SqlDbType.Int).Value = request.CategoryID;
+            command.Parameters.Add("@LocationID", SqlDbType.Int).Value = request.LocationID;
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
     }
 }
