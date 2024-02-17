@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using InventoryService.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace InventoryService.Controllers
 {
@@ -6,6 +8,13 @@ namespace InventoryService.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
+        private readonly IItemService itemService;
+
+        public InventoryController(IItemService itemService)
+        {
+            this.itemService = itemService;
+        }
+
         // GET: api/<InventoryController>
         [HttpGet]
         public string Get()
@@ -29,8 +38,10 @@ namespace InventoryService.Controllers
         // GET api/<InventoryController>/load
         [HttpGet("load")]
         public string LoadInventory()
+        
         {
-            return "inventory";
+            var items = itemService.LoadAll();
+            return JsonSerializer.Serialize(items);
         }
 
         // GET api/<InventoryController>/add
