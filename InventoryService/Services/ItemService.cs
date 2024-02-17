@@ -16,5 +16,10 @@ namespace InventoryService.Services
         {
             return repository.LoadAll();
         }
+
+        public void AddItem(AddItemRequest request)
+        {
+            repository.AddItem(request);
+        }
     }
 }

@@ -1,6 +1,6 @@
-﻿using InventoryService.Services;
+﻿using InventoryService.Contracts;
+using InventoryService.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace InventoryService.Controllers
 {
@@ -15,50 +15,59 @@ namespace InventoryService.Controllers
             this.itemService = itemService;
         }
 
-        // GET: api/<InventoryController>
+        // GET: api/inventory
         [HttpGet]
         public string Get()
         {
             return "App is running";
         }
 
-        // GET api/<InventoryController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return id.ToString();
-        }
-
-        // POST api/<InventoryController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // GET api/<InventoryController>/load
+        // GET api/inventory/load
         [HttpGet("load")]
-        public string LoadInventory()
+        public IActionResult LoadInventory()
         
         {
-            var items = itemService.LoadAll();
-            return JsonSerializer.Serialize(items);
+            try
+            {
+                var response = new LoadInventoryResponse
+                {
+                    Success = true,
+                    Items = itemService.LoadAll()
+                };
+
+                return new JsonResult(response);
+            }
+            catch (Exception)
+            {
+                // Potentially log exception in future
+                return new JsonResult(new LoadInventoryResponse { Success = false, Error = "Error occurred while adding item" });
+            }
         }
 
-        // GET api/<InventoryController>/add
-        [HttpGet("add")]
-        public string AddItem()
+        // POST api/inventory/add
+        [HttpPost("add")]
+        public IActionResult AddItem([FromBody] AddItemRequest request)
         {
-            return "added";
+            try
+            {
+                itemService.AddItem(request);
+                return new JsonResult(new AddItemResponse { Success = true });
+            }
+            catch (Exception)
+            {
+                // Potentially log exception in future
+                return new JsonResult(new AddItemResponse { Success = false, Error = "Error occurred while adding item" });
+            }
         }
 
-        // GET api/<InventoryController>/update
+        // GET api/inventory/update
         [HttpGet("update")]
         public string UpdateItem()
         {
             return "updated";
         }
 
-        // GET api/<InventoryController>/delete
+        // GET api/inventory/delete
         [HttpGet("delete")]
         public string Delete()
         {
